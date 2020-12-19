@@ -15,43 +15,55 @@ class Person:
 
 
 class Application:
-    def add_contact(self):
-        window_add = Tk()
-        window_add.title("Welcome to Contacts list")
+    def create_window(self):
+        info = Person()
+        new_window = Tk()
+        new_window.title("Welcome to Contacts list")
+        new_window.geometry("1000x250")
 
-        lbl = Label(window_add, text="Options:", font=("Times New Roman", 16))
+        lbl = Label(new_window, text="Options:", font=("Times New Roman", 16))
         lbl.grid(column=0, row=0)
-        window_add.geometry("1000x250")
 
-        lbl = Label(window_add, text="Name:", font=("Times New Roman", 16))
+        lbl = Label(new_window, text="Name:", font=("Times New Roman", 16))
         lbl.grid(column=1, row=1)
 
-        txt1 = Entry(window_add, width=20)
-        txt1.grid(column=2, row=1)
-        txt1.focus()
-
-        lbl = Label(window_add, text="Address:", font=("Times New Roman", 16))
+        lbl = Label(new_window, text="Address:", font=("Times New Roman", 16))
         lbl.grid(column=3, row=1)
 
-        txt2 = Entry(window_add, width=20)
-        txt2.grid(column=4, row=1)
-
-        lbl = Label(window_add, text="Phone:", font=("Times New Roman", 16))
+        lbl = Label(new_window, text="Phone:", font=("Times New Roman", 16))
         lbl.grid(column=5, row=1)
 
-        txt3 = Entry(window_add, width=20)
-        txt3.grid(column=6, row=1)
-
-        lbl = Label(window_add, text="ID:", font=("Times New Roman", 16))
+        lbl = Label(new_window, text="ID:", font=("Times New Roman", 16))
         lbl.grid(column=7, row=1)
 
-        txt4 = Entry(window_add, width=20)
-        txt4.grid(column=8, row=1)
+        info.name = Entry(new_window, width=20)
+        info.name.grid(column=2, row=1)
+        info.name.focus()
 
-        btn = Button(window_add, text="Confirm",
-                     command=lambda: [self.show_message(),
-                                      self.save(txt1, txt2, txt3, txt4),
-                                      window_add.destroy()])
+        info.address = Entry(new_window, width=20)
+        info.address.grid(column=4, row=1)
+
+        info.phone = Entry(new_window, width=20)
+        info.phone.grid(column=6, row=1)
+
+        info.id = Entry(new_window, width=20)
+        info.id.grid(column=8, row=1)
+
+        self.confirm_button(new_window, info)
+
+        return new_window, info
+
+    def get_text(self, info):
+        res_info = Person()
+        res_info.name = info.name.get()
+        res_info.address = info.address.get()
+        res_info.phone = info.phone.get()
+        res_info.id = info.id.get()
+        self.save(res_info)
+
+    def confirm_button(self, new_window, info):
+        btn = Button(new_window, text="Confirm", command=lambda:
+        [self.show_message(), self.get_text(info), new_window.destroy()])
         btn.grid(column=9, row=1)
 
     def del_contact(self):
@@ -63,71 +75,73 @@ class Application:
         a = 0
 
     def view_contacts(self):
+        info = Person()
         with open("database.dat", "rb") as file:
             person_info = pickle.load(file)
-            information = "Name: %s \t Address: %s \t Phone: %s \t " \
-                          "ID: %s" % (person_info.name, person_info.address,
-                                      person_info.phone, person_info.id)
-            print(information)
-
-    def scroled_text(self):
+            for item in person_info:
+                print(item)
+        
+    def scroled_text(self, window):
         txt = scrolledtext.ScrolledText(window, width=40, height=10)
 
     def show_message(self):
-        messagebox.showinfo("Information", "Successful")
+        messagebox.showinfo(title="Information", message="Successful")
 
-    def save(self, name, address, phone, id):
-        info = Person()
-        info.name = name.get()
-        info.address = address.get()
-        info.phone = phone.get()
-        info.id = id.get()
+    def save(self, res_info):
         with open("database.dat", "ab") as file:
-            pickle.dump(info, file)
+            pickle.dump(res_info.name, file)
+            pickle.dump(res_info.address, file)
+            pickle.dump(res_info.phone, file)
+            pickle.dump(res_info.id, file)
 
-    def button_1(self):
-        btn1 = Button(window, text="Add new contact", command=self.add_contact)
+    def button_add(self, window):
+        btn1 = Button(window, text="Add new contact",
+                      command=self.create_window)
         btn1.grid(column=0, row=1)
 
-    def button_2(self):
-        btn2 = Button(window, text="Edit contact", command=self.edit_contact)
+    def button_2(self, window):
+        btn2 = Button(window, text="Edit contact")
         btn2.grid(column=0, row=2)
 
-    def button_3(self):
-        btn3 = Button(window, text="Delete contact", command=self.del_contact)
+    def button_3(self, window):
+        btn3 = Button(window, text="Delete contact")
         btn3.grid(column=0, row=3)
 
-    def button_4(self):
-        btn4 = Button(window, text="Search contact",
-                      command=self.search_contact)
+    def button_4(self, window):
+        btn4 = Button(window, text="Search contact")
         btn4.grid(column=0, row=4)
 
-    def button_5(self):
+    def button_view(self, window):
         btn5 = Button(window, text="View contact list",
                       command=self.view_contacts)
         btn5.grid(column=0, row=5)
 
-    def button_6(self):
+    def button_6(self, window):
         btn6 = Button(window, text="Exit", command=window.quit)
         btn6.grid(column=0, row=6)
+
+    def main_screen(self):
+        window = Tk()
+        window.title("Welcome to Contacts list")
+        lbl = Label(window, text="Options:", font=("Times New Roman", 16))
+        lbl.grid(column=0, row=0)
+        window.geometry("500x250")
+        return window
+
+
 
 
 def main():
     app = Application()
-    app.button_1()
-    app.button_2()
-    app.button_3()
-    app.button_4()
-    app.button_5()
-    app.button_6()
+    window = app.main_screen()
+    app.button_add(window)
+    app.button_2(window)
+    app.button_3(window)
+    app.button_4(window)
+    app.button_view(window)
+    app.button_6(window)
     window.mainloop()
 
-
-window = Tk()
-window.title("Welcome to Contacts list")
-lbl = Label(window, text="Options:", font=("Times New Roman", 16))
-lbl.grid(column=0, row=0)
-window.geometry("500x250")
 
 if __name__ == "__main__":
     main()
