@@ -1,4 +1,6 @@
-from app.controller import *
+from controller import *
+from Model import *
+from Person import Person
 from tkinter import *
 from tkinter import messagebox
 
@@ -40,7 +42,7 @@ def create_record_window(i: int, contact_id: str) -> Tk and Person(Entry):
         confirm_add_button(new_window, info, 1)
     if i == 2:
         confirm_edit_button(new_window, info, 2, contact_id)
-    return new_window, info
+    return info
 
 
 def create_view_window():
@@ -52,7 +54,7 @@ def create_view_window():
     lbl.grid(column=0, row=0)
     del_butn(viewing_window)
     edit_butn(viewing_window)
-    print_contacts(viewing_window)
+    return viewing_window
 
 
 def create_search_window():
@@ -71,7 +73,7 @@ def create_search_window():
     search_id.focus()
 
     btn = Button(new_window, text="Search ID", command=lambda:
-    (get_id(search_id, new_window)))
+    (find_contact(get_id(search_id), new_window, get_all_contacts())))
     btn.grid(column=4, row=1)
 
 
@@ -103,7 +105,7 @@ def create_edit_window():
     edit_id.grid(column=0, row=2)
     edit_id.focus()
     btn = Button(edit_window, text="Edit", command=lambda:
-    (edit_contact(edit_id)))
+    (edit_contact(edit_id.get(), create_record_window(2, edit_id.get()))))
     btn.grid(column=1, row=2)
 
 
@@ -121,7 +123,7 @@ def edit_butn(view_contacts_window: Tk):
 
 def confirm_add_button(new_window: Tk, info: Person(Entry), i: int):
     btn = Button(new_window, text="Confirm", command=lambda:
-    (show_message(), get_text(info, i, "0"), new_window.destroy()))
+    (show_message(), get_text(info, i, ""), new_window.destroy()))
     btn.grid(column=9, row=1)
 
 
@@ -139,7 +141,7 @@ def show_message():
 
 def button_add(window: Tk):
     btn1 = Button(window, text="Add new contact",
-                  command=lambda: (create_record_window(1, "0")))
+                  command=lambda: (create_record_window(1, "")))
     btn1.grid(column=0, row=1)
 
 
@@ -151,7 +153,8 @@ def button_search(window: Tk):
 
 def button_view(window: Tk):
     btn5 = Button(window, text="View contact list",
-                  command=create_view_window)
+                  command=lambda: print_contacts(create_view_window(),
+                                                 get_all_contacts()))
     btn5.grid(column=0, row=3)
 
 
@@ -169,9 +172,9 @@ def main_screen():
     return window
 
 
-def get_id(search_id: Entry, new_window: Tk):
+def get_id(search_id: Entry):
     search_id_str = search_id.get()
-    print_find_contact(search_id_str, new_window)
+    return search_id_str
 
 
 def get_text(info: Person(Entry), i: int, contact_id: str):
@@ -181,3 +184,26 @@ def get_text(info: Person(Entry), i: int, contact_id: str):
     new_contact_info.phone = info.phone.get()
     new_contact_info.id = info.id.get()
     save(new_contact_info, i, contact_id)
+
+
+def output_find_contact(new_window: Tk, database: list, i: int):
+    lbl = Label(new_window, text="Name: \t %s \t Address: \t %s \t Phone: \t"
+                                 " %s \t ID:" "%s" % (database[i].name,
+                                                      database[i].address,
+                                                      database[i].phone,
+                                                      database[i].id),
+                font=("Times New Roman", 12))
+    lbl.grid(column=0, row=i + 4)
+
+
+def output_contact(view_contacts_window: Tk, contacts_list: list, i: int):
+    lbl = Label(view_contacts_window, text="Name: \t %s \t Address: "
+                                           "\t %s \t" "Phone: \t %s "
+                                           "\t ID:" "%s" %
+                                           (contacts_list[i].name,
+                                            contacts_list[i].address,
+                                            contacts_list[i].phone,
+                                            contacts_list[i].id),
+                font=("Times New Roman", 12))
+    lbl.grid(column=0, row=i + 2)
+
