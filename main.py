@@ -1,4 +1,4 @@
-from app.main_screen import *
+from app.view import *
 
 
 def main():
