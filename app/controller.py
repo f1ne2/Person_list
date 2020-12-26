@@ -1,32 +1,79 @@
 from view import *
+from database import *
+from Model import *
 from Person import Person
-from tkinter import *
-import os
 
 
-def find_contact(search_id_str: str, new_window: Tk, database: list):
-    for i in range(len(database)):
-        if search_id_str == database[i].id:
-            output_find_contact(new_window, database, i)
+def find_contact(search_id_str: str) -> Person:
+    return find_database_contact(search_id_str)
 
 
-def print_contacts(view_contacts_window: Tk, contacts_list: list):
-    for i in range(len(contacts_list)):
-        output_contact(view_contacts_window, contacts_list, i)
+def print_contacts() -> List[Person]:
+    return get_all_contacts()
 
 
-def save(new_contact_info: Person(Entry), i: int, contact_id: str):
-    if os.path.exists("database.dat"):
-        database = get_all_contacts()
-        if i == 1:
-            database.append(new_contact_info)
-        if i == 2:
-            for j in range(len(database)):
-                if contact_id == database[j].id:
-                    database.remove(database[j])
-                    database.insert(j, new_contact_info)
-                    break
-    else:
-        database = [new_contact_info]
-    write_all_contacts(database)
+def del_contact(search_id_str: str):
+    delete_contact(search_id_str)
+
+
+def edt_contact(edit_id_str: str, info: Person):
+    list_contacts = get_all_contacts()
+    edit_contact(edit_id_str, info, list_contacts)
+
+
+def load_for_add(new_contact_info: Person):
+    add_contact(get_all_contacts(), new_contact_info)
+
+
+def load_for_edit(new_contact_info: Person, contact_id: str):
+    write_ed_contact(get_all_contacts(), new_contact_info, contact_id)
+
+
+def load_for_add_db(new_contact_info: Person):
+    insert_into_table(new_contact_info)
+
+
+def load_for_edit_db(new_contact_info: Person, contact_id: str):
+    update_table(new_contact_info, contact_id)
+
+
+def load_from_db_to_view() -> List[Person]:
+    out_info = Person()
+    out_list = []
+    tupl = load_sql_database()
+    for i in range(len(tupl)):
+        out_info.name = tupl[i][0]
+        out_info.address = tupl[i][1]
+        out_info.phone = tupl[i][2]
+        out_info.id = tupl[i][3]
+        out_list.append(out_info)
+        out_info = Person()
+    return out_list
+
+
+def del_contact_sql_db(search_id_str: str):
+    delete_from_table(search_id_str)
+
+
+def edt_contact_sql_db(edit_id_str: str, info: Person):
+    list_contacts = load_from_db_to_view()
+    edit_contact(edit_id_str, info, list_contacts)
+
+
+def find_contact_in_db(search_id_str: str) -> Person:
+    tupl = select_from_db(search_id_str)
+    find_info = Person()
+    find_info.name = tupl[0][0]
+    find_info.address = tupl[0][1]
+    find_info.phone = tupl[0][2]
+    find_info.id = tupl[0][3]
+    return find_info
+
+
+
+
+
+
+
+
 
