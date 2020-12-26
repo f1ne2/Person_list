@@ -3,3 +3,4 @@ database.db
 /app/__pycache__/*
 /.idea/*
 contacts_list.py
+/my_database.db
