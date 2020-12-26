@@ -1,4 +1,5 @@
 database.dat
+database.db
 /app/__pycache__/*
 /.idea/*
 contacts_list.py
