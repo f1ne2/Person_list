@@ -4,40 +4,41 @@ from Model import *
 from Person import Person
 
 
-def find_contact(search_id_str: str) -> Person:
-    return find_database_contact(search_id_str)
+def find_contact(self) -> Person:
+    return find_database_contact(self.id_str)
 
 
-def print_contacts() -> List[Person]:
+def print_contacts(self) -> List[Person]:
     return get_all_contacts()
 
 
-def del_contact(search_id_str: str):
-    delete_contact(search_id_str)
+def del_contact(self):
+    delete_contact(self.search_id_str)
 
 
-def edt_contact(edit_id_str: str, info: Person):
+def edt_contact(self):
     list_contacts = get_all_contacts()
-    edit_contact(edit_id_str, info, list_contacts)
+    edit_contact(self.edit_id_str, self.info, list_contacts)
 
 
-def load_for_add(new_contact_info: Person):
-    add_contact(get_all_contacts(), new_contact_info)
+def load_for_add(self):
+    add_contact(get_all_contacts(), self.new_contact_info)
 
 
-def load_for_edit(new_contact_info: Person, contact_id: str):
-    write_ed_contact(get_all_contacts(), new_contact_info, contact_id)
+def load_for_edit(self):
+    write_ed_contact(get_all_contacts(), self.new_contact_info,
+                     self.contact_id)
 
 
-def load_for_add_db(new_contact_info: Person):
-    insert_into_table(new_contact_info)
+def load_for_add_db(self):
+    insert_into_table(self.new_contact_info)
 
 
-def load_for_edit_db(new_contact_info: Person, contact_id: str):
-    update_table(new_contact_info, contact_id)
+def load_for_edit_db(self):
+    update_table(self.new_contact_info, self.contact_id)
 
 
-def load_from_db_to_view() -> List[Person]:
+def load_from_db_to_view(self) -> List[Person]:
     out_info = Person()
     out_list = []
     tupl = load_sql_database()
@@ -51,17 +52,17 @@ def load_from_db_to_view() -> List[Person]:
     return out_list
 
 
-def del_contact_sql_db(search_id_str: str):
-    delete_from_table(search_id_str)
+def del_contact_sql_db(self):
+    delete_from_table(self.search_id_str)
 
 
-def edt_contact_sql_db(edit_id_str: str, info: Person):
-    list_contacts = load_from_db_to_view()
-    edit_contact(edit_id_str, info, list_contacts)
+def edt_contact_sql_db(self):
+    list_contacts = load_from_db_to_view(self)
+    edit_contact(self.edit_id_str, self.info, list_contacts)
 
 
-def find_contact_in_db(search_id_str: str) -> Person:
-    tupl = select_from_db(search_id_str)
+def find_contact_in_db(self) -> Person:
+    tupl = select_from_db(self.search_id_str)
     find_info = Person()
     find_info.name = tupl[0][0]
     find_info.address = tupl[0][1]
@@ -70,10 +71,28 @@ def find_contact_in_db(search_id_str: str) -> Person:
     return find_info
 
 
+def init(self, id_str: str, info: Person):
+    self.id_str = id_str
+    self.info = info
 
 
+class MetaFile(object):
+    def __str__(self):
+        return '<transfer_info-object/>'
 
 
+attrs_file = {'find_contact': find_contact,'print_contacts': print_contacts,
+              'del_contact': del_contact, 'edt_contact': edt_contact,
+              'load_for_add': load_for_add, 'load_for_edit': load_for_edit,
+              '__init__': init, 'load_for_add_db': load_for_add_db,
+              'load_for_edit_db': load_for_edit_db,
+              'load_from_db_to_view': load_from_db_to_view,
+              'del_contact_sql_db': del_contact_sql_db,
+              'edt_contact_sql_db': edt_contact_sql_db,
+              'find_contact_in_db': find_contact_in_db}
 
-
-
+bases = (MetaFile,)
+TransferFile = type('transfer_info', bases, attrs_file)
+transfer_info1 = TransferFile("1", info=None)
+out = transfer_info1.find_contact()
+print(out.name)
