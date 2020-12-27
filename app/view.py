@@ -127,7 +127,7 @@ def create_edit_window(flag: int):
     else:
         btn = Button(edit_window, text="Edit", command=lambda:
         (edt_contact_sql_db(edit_id.get(),
-                            create_record_window(2, edit_id.get(),flag))))
+                            create_record_window(2, edit_id.get(), flag))))
         btn.grid(column=1, row=2)
 
 
@@ -152,7 +152,8 @@ def confirm_add_button(new_window: Tk, info: Person(Entry), i: int, flag: int):
 def confirm_edit_button(new_window: Tk, info: Person(Entry), i: int,
                         contact_id: str, flag: int):
     btn = Button(new_window, text="Confirm", command=lambda:
-    (show_message(), get_text(info, i, contact_id, flag), new_window.destroy()))
+    (show_message(), get_text(info, i, contact_id, flag),
+     new_window.destroy()))
     btn.grid(column=9, row=1)
 
 
