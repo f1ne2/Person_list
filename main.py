@@ -15,11 +15,12 @@ class Flag:
 
 def main():
     flag = Flag(input(""))
-    window = main_screen()
-    button_add(window, flag.define())
-    button_search(window, flag.define())
-    button_view(window, flag.define())
-    button_exit(window)
+    view2 = ViewTkinter(flag.define())
+    window = view2.main_screen()
+    view2.button_add(window)
+    view2.button_search(window)
+    view2.button_view(window)
+    view2.button_exit(window)
     window.mainloop()
 
 
