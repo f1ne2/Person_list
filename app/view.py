@@ -12,8 +12,8 @@ class ViewTkinter:
             self.data1 = WorkWithDB()
 
     def create_record_window(self, i: int, contact_id: str) -> \
-            Person(Entry):
-        info = Person()
+            Person("", "", "", ""):
+        info = Person("", "", "", "")
         new_window = Tk()
         new_window.title("Welcome to Contacts list")
         new_window.geometry("1000x250")
@@ -51,7 +51,7 @@ class ViewTkinter:
             self.confirm_edit_button(new_window, info, 2, contact_id)
         return info
 
-    def create_view_window(self):
+    def create_view_window(self) -> None:
         viewing_window = Tk()
         viewing_window.title("Contacts list review")
         viewing_window.geometry("750x250")
@@ -62,11 +62,11 @@ class ViewTkinter:
         self.edit_butn(viewing_window)
         self.data_from_controller(viewing_window)
 
-    def data_from_controller(self, viewing_window: Tk):
+    def data_from_controller(self, viewing_window: Tk) -> None:
         self.output_contact(viewing_window,
                             Controller(self.data1).load_to_view())
 
-    def create_search_window(self):
+    def create_search_window(self) -> None:
         new_window = Tk()
         new_window.title("Welcome to Contacts list")
         new_window.geometry("500x250")
@@ -86,7 +86,7 @@ class ViewTkinter:
                                   find_contact(search_id.get()))))
         btn.grid(column=4, row=1)
 
-    def create_delete_window(self):
+    def create_delete_window(self) -> None:
         new_window = Tk()
         new_window.title("Welcome to Contacts list")
         new_window.geometry("500x250")
@@ -101,7 +101,7 @@ class ViewTkinter:
         (Controller(self.data1).del_contact(search_id.get())))
         btn.grid(column=1, row=2)
 
-    def create_edit_window(self):
+    def create_edit_window(self) -> None:
         edit_window = Tk()
         edit_window.title("Welcome to Contacts list")
         edit_window.geometry("500x250")
@@ -118,48 +118,49 @@ class ViewTkinter:
                                             (2, edit_id.get()))))
         btn.grid(column=1, row=2)
 
-    def del_butn(self, view_contacts_window: Tk):
+    def del_butn(self, view_contacts_window: Tk) -> None:
         btn = Button(view_contacts_window, text="Delete contact",
                      command=lambda: (self.create_delete_window()))
         btn.grid(column=3, row=0)
 
-    def edit_butn(self, view_contacts_window: Tk):
+    def edit_butn(self, view_contacts_window: Tk) -> None:
         btn = Button(view_contacts_window, text="Edit contact",
                      command=self.create_edit_window)
         btn.grid(column=4, row=0)
 
-    def confirm_add_button(self, new_window: Tk, info: Person(Entry), i: int):
+    def confirm_add_button(self, new_window: Tk, info: Person("", "", "", ""),
+                           i: int) -> None:
         btn = Button(new_window, text="Confirm", command=lambda:
         (self.show_message(), self.get_text(info, i, ""), new_window.destroy()))
         btn.grid(column=9, row=1)
 
-    def confirm_edit_button(self, new_window: Tk, info: Person(Entry), i: int,
-                            contact_id: str):
+    def confirm_edit_button(self, new_window: Tk, info: Person("", "", " ", ""),
+                            i: int, contact_id: str) -> None:
         btn = Button(new_window, text="Confirm", command=lambda:
         (self.show_message(), self.get_text(info, i, contact_id),
          new_window.destroy()))
         btn.grid(column=9, row=1)
 
-    def show_message(self):
+    def show_message(self) -> None:
         messagebox.showinfo(title="Information", message="Successful")
 
-    def button_add(self, window: Tk):
+    def button_add(self, window: Tk) -> None:
         btn1 = Button(window, text="Add new contact",
                       command=lambda: (self.create_record_window(1, "")))
         btn1.grid(column=0, row=1)
 
-    def button_search(self, window: Tk):
+    def button_search(self, window: Tk) -> None:
         btn4 = Button(window, text="Search contact",
                       command=lambda: (self.create_search_window()))
         btn4.grid(column=0, row=2)
 
-    def button_view(self, window: Tk):
+    def button_view(self, window: Tk) -> None:
         btn5 = Button(window, text="View contact list",
                       command=lambda:
                       (self.create_view_window()))
         btn5.grid(column=0, row=3)
 
-    def button_exit(self, window: Tk):
+    def button_exit(self, window: Tk) -> None:
         btn6 = Button(window, text="Exit", command=window.quit)
         btn6.grid(column=0, row=4)
 
@@ -171,8 +172,9 @@ class ViewTkinter:
         window.geometry("500x250")
         return window
 
-    def get_text(self, info: Person(Entry), i: int, contact_id: str):
-        new_contact_info = Person()
+    def get_text(self, info: Person("", "", "", ""), i: int, contact_id: str)\
+            -> None:
+        new_contact_info = Person("", "", "", "")
         new_contact_info.name = info.name.get()
         new_contact_info.address = info.address.get()
         new_contact_info.phone = info.phone.get()
@@ -182,16 +184,18 @@ class ViewTkinter:
         if i == 2:
             Controller(self.data1).load_for_edit(new_contact_info, contact_id)
 
-    def output_find_contact(self, new_window: Tk, contact: Person):
+    def output_find_contact(self, new_window: Tk, contact: Person) -> None:
         lbl = Label(new_window, text="Name: \t %s \t Address: \t %s \t "
-                                     "Phone: \t %s \t ID:" "%s" % (contact.name,
-                                                                   contact.address,
-                                                                   contact.phone,
-                                                                   contact.id),
+                                     "Phone: \t %s \t ID:" 
+                                     "%s" % (contact.name,
+                                             contact.address,
+                                             contact.phone,
+                                             contact.id),
                     font=("Times New Roman", 12))
         lbl.grid(column=0, row=4)
 
-    def output_contact(self, view_contacts_window: Tk, contacts_list: list):
+    def output_contact(self, view_contacts_window: Tk, contacts_list: list) \
+            -> None:
         for i in range(len(contacts_list)):
             lbl = Label(view_contacts_window, text="Name: \t %s \t Address: "
                                                    "\t %s \t" "Phone: \t %s "
@@ -202,4 +206,3 @@ class ViewTkinter:
                                                     contacts_list[i].id),
                         font=("Times New Roman", 12))
             lbl.grid(column=0, row=i+2)
-
