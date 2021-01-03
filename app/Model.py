@@ -5,7 +5,7 @@ import os
 
 
 class WorkWithFile(FormalParserInterface):
-    def delete_from_table(self, delete_id_str: str):
+    def delete_from_table(self, delete_id_str: str) -> None:
         list_contact = self.get_all_contacts()
         if os.path.exists("database.dat"):
             for i in range(len(list_contact)):
@@ -14,10 +14,8 @@ class WorkWithFile(FormalParserInterface):
                     break
             with open("database.dat", "wb") as file:
                 pickle.dump(list_contact, file)
-        else:
-            pass
 
-    def update_table(self, new_contact_info: Person, contact_id: str):
+    def update_table(self, new_contact_info: Person, contact_id: str) -> None:
         list_contacts = self.get_all_contacts()
         for j in range(len(list_contacts)):
             if contact_id == list_contacts[j].id:
@@ -29,21 +27,16 @@ class WorkWithFile(FormalParserInterface):
     def get_all_contacts(self) -> list:
         list_contacts = []
         if os.path.exists("database.dat"):
-            file = open("database.dat", "rb")
-            while 1:
-                try:
-                    list_contacts = pickle.load(file)
-                except EOFError:
-                    break
-            file.close()
+            with open("database.dat", "rb") as file:
+                list_contacts = pickle.load(file)
             return list_contacts
         return list_contacts
 
-    def write_all_contacts(self, database: list):
+    def write_all_contacts(self, database: list) -> None:
         with open("database.dat", "wb") as file:
             pickle.dump(database, file)
 
-    def insert_into_table(self, new_contact_info):
+    def insert_into_table(self, new_contact_info: Person) -> None:
         list_contacts = self.get_all_contacts()
         list_contacts.append(new_contact_info)
         self.write_all_contacts(list_contacts)
