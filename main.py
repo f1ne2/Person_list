@@ -21,6 +21,8 @@ def main():
     view2.button_search(window)
     view2.button_view(window)
     view2.button_exit(window)
+    create_contact_table = WorkWithDB()
+    Controller(create_contact_table).create_table()
     window.mainloop()
 
 
