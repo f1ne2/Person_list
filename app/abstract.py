@@ -5,11 +5,11 @@ from abc import ABCMeta, abstractmethod
 
 class FormalParserInterface(metaclass=ABCMeta):
     @abstractmethod
-    def delete_from_table(self, delete_id_str: str) -> Person:
+    def delete_from_table(self, delete_id_str: str) -> int:
         pass
 
     @abstractmethod
-    def update_table(self, new_contact_info: Person, contact_id: str):
+    def update_table(self, new_contact_info: Person, contact_id: str) -> int:
         pass
 
     @abstractmethod
@@ -17,9 +17,13 @@ class FormalParserInterface(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def insert_into_table(self, new_contact_info: Person):
+    def insert_into_table(self, new_contact_info: Person) -> int:
         pass
 
     @abstractmethod
     def select_from_db(self, search_id_str: str) -> Person:
+        pass
+
+    @abstractmethod
+    def create_table(self) -> None:
         pass
