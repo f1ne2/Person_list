@@ -1,10 +1,7 @@
-from typing import Optional
-
-
 class Person:
 
-    def __init__(self, name: Optional[str], address: Optional[str],
-                 phone: Optional[str], identification: Optional[str]):
+    def __init__(self, name: str, address: str,
+                 phone: str, identification: str):
         self.name = name
         self.address = address
         self.phone = phone
