@@ -12,4 +12,4 @@ class TestController(unittest.TestCase):
         self.i = 1
         self.res = ViewTkinter.create_record_window(self.new_window, self.i,
                                                     self.contact_id)
-        self.assertIsInstance(Person(Entry), type(self.res))
+        self.assertIsInstance(Person("", "", "", ""), type(self.res))

@@ -21,7 +21,7 @@ class TestDatabase(unittest.TestCase):
 
     def test_update_table(self):
         self.file.insert_into_table(self.person_info)
-        new_contact_info = Person("Olga", "A", "+37529", "23")
+        new_contact_info = Person("Olga", "A", "+37529", "22")
         self.file.update_table(new_contact_info, "22")
         list_contact = self.file.get_all_contacts()
         self.assertEqual(list_contact[0], new_contact_info)

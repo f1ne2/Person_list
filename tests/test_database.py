@@ -16,15 +16,14 @@ class TestDatabase(unittest.TestCase):
 
     def test_update_table(self):
         self.sql.insert_into_table(self.person_info)
-        new_person_info = Person('Olga', 'Minsk', '+375', '33')
+        new_person_info = Person('Olga', 'Minsk', '+375', '22')
         self.sql.update_table(new_person_info, '22')
-        cursor.execute("SELECT * FROM contacts WHERE id=33")
+        cursor.execute("SELECT * FROM contacts WHERE id=22")
         cursor_out = cursor.fetchone()
-        self.assertEqual(cursor_out, ('Olga', 'Minsk', '+375', '33'))
-        self.sql.delete_from_table('33')
+        self.assertEqual(cursor_out, ('Olga', 'Minsk', '+375', '22'))
+        self.sql.delete_from_table('22')
 
     def test_delete_from_table(self):
-        self.sql.delete_from_table('33')
         self.res = cursor.execute("SELECT * FROM contacts WHERE id=33")
         conn.commit()
         cursor_out = cursor.fetchall()
