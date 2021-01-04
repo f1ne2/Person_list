@@ -5,24 +5,47 @@ from abstract import FormalParserInterface
 
 
 class WorkWithDB(FormalParserInterface):
-    def insert_into_table(self, new_contact_info: Person) -> None:
+    def insert_into_table(self, new_contact_info: Person) -> int:
+        sql = "SELECT * FROM contacts"
+        cursor.execute(sql)
+        tupl = cursor.fetchall()
+        if tupl != [()]:
+            for i in range(len(tupl)):
+                if new_contact_info.id == tupl[i][3]:
+                    return 2
         cursor.execute("""INSERT INTO contacts (name, address, phone, id) 
         VALUES (?, ?, ?, ?)""", [new_contact_info.name,
                                  new_contact_info.address,
                                  new_contact_info.phone, new_contact_info.id])
         conn.commit()
+        return 1
 
-    def delete_from_table(self, search_id_str: str) -> None:
-        cursor.execute("DELETE FROM contacts WHERE id = ?", (search_id_str,))
-        conn.commit()
+    def delete_from_table(self, search_id_str: str) -> int:
+        sql = "SELECT * FROM contacts"
+        cursor.execute(sql)
+        tupl = cursor.fetchall()
+        for i in range(len(tupl)):
+            if search_id_str == tupl[i][3]:
+                cursor.execute("DELETE FROM contacts WHERE id = ?",
+                               (search_id_str,))
+                conn.commit()
+                return 1
+        return 2
 
-    def update_table(self, new_contact_info: Person, contact_id: str) -> None:
-        cursor.execute("""UPDATE contacts SET name = ?, address = ?, phone = ?, 
-        id = ? WHERE id = ?""", [new_contact_info.name,
-                                 new_contact_info.address,
-                                 new_contact_info.phone, new_contact_info.id,
-                                 contact_id])
-        conn.commit()
+    def update_table(self, new_contact_info: Person, contact_id: str) -> int:
+        i = 0
+        if contact_id == new_contact_info.id:
+            i = 1
+            cursor.execute("""UPDATE contacts SET name = ?, address = ?, 
+            phone = ?, id = ? WHERE id = ?""", [new_contact_info.name,
+                                                new_contact_info.address,
+                                                new_contact_info.phone,
+                                                new_contact_info.id,
+                                                contact_id])
+            conn.commit()
+        if i == 1:
+            return 1
+        return 2
 
     def get_all_contacts(self) -> List[Person]:
         cursor.execute("""SELECT * FROM contacts""")
@@ -43,10 +66,14 @@ class WorkWithDB(FormalParserInterface):
         cursor.execute(sql, [search_id_str])
         tupl = cursor.fetchall()
         find_info = Person("", "", "", "")
-        find_info.name = tupl[0][0]
-        find_info.address = tupl[0][1]
-        find_info.phone = tupl[0][2]
-        find_info.id = tupl[0][3]
+        try:
+            find_info.name = tupl[0][0]
+            find_info.address = tupl[0][1]
+            find_info.phone = tupl[0][2]
+            find_info.id = tupl[0][3]
+        except:
+            find_info = Person("", "", "", "")
+            return find_info
         return find_info
 
     def create_table(self) -> None:
