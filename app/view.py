@@ -66,7 +66,7 @@ class ViewTkinter:
         self.output_contact(viewing_window,
                             Controller(self.data1).load_to_view())
 
-    def create_search_window(self, list_contacts: List[Person]) -> None:
+    def create_search_window(self) -> None:
         new_window = Tk()
         new_window.title("Welcome to Contacts list")
         new_window.geometry("500x250")
@@ -85,8 +85,6 @@ class ViewTkinter:
                                   Controller(self.data1).
                                   find_contact(search_id.get()))))
         btn.grid(column=4, row=1)
-        if len(list_contacts) == 0:
-            self.show_error(new_window)
 
     def create_delete_window(self, view_contacts_window: Tk) -> None:
         new_window = Tk()
@@ -101,7 +99,7 @@ class ViewTkinter:
         search_id.focus()
         btn = Button(new_window, text="Delete", command=lambda:
         (self.show_search_error() if
-         Controller(self.data1).del_contact(search_id.get()) != 1 else
+         not Controller(self.data1).del_contact(search_id.get()) else
          [Controller(self.data1).del_contact(search_id.get()),
          new_window.destroy(), view_contacts_window.destroy(),
          self.create_view_window()]))
@@ -119,10 +117,10 @@ class ViewTkinter:
         edit_id.grid(column=0, row=2)
         edit_id.focus()
         btn = Button(edit_window, text="Edit", command=lambda:
-        (self.show_search_error() if Controller(self.data1).edt_contact
-                                     (edit_id.get()) == Person("", "", "", "")
-         else [self.fill_empty_fields(edit_id), edit_window.destroy(),
-               viewing_window.destroy()]))
+        (self.show_search_error() if not Controller(self.data1).edt_contact
+                                     (edit_id.get()) else
+         [self.fill_empty_fields(edit_id), edit_window.destroy(),
+          viewing_window.destroy()]))
         btn.grid(column=1, row=2)
 
     def del_butn(self, view_contacts_window: Tk) -> None:
@@ -159,7 +157,7 @@ class ViewTkinter:
 
     def button_search(self, window: Tk) -> None:
         btn4 = Button(window, text="Search contact", command=lambda:
-        (self.create_search_window(Controller(self.data1).load_to_view())))
+        (self.create_search_window()))
         btn4.grid(column=0, row=2)
 
     def button_view(self, window: Tk) -> None:
@@ -184,18 +182,18 @@ class ViewTkinter:
         new_contact_info = Person(info.name.get(), info.address.get(),
                                   info.phone.get(), info.id.get())
         if i == 1:
-            if Controller(self.data1).load_for_add(new_contact_info) == 1:
+            if Controller(self.data1).load_for_add(new_contact_info):
                 self.show_message()
                 new_window.destroy()
             else:
                 self.show_add_error()
         if i == 2:
-            if Controller(self.data1).load_for_edit(new_contact_info,
-                                                    contact_id) != 2:
+            if not Controller(self.data1).load_for_edit(new_contact_info,
+                                                    contact_id):
+                self.show_edit_error()
+            else:
                 self.show_message()
                 new_window.destroy()
-            else:
-                self.show_edit_error()
 
     def output_find_contact(self, new_window: Tk, contact: Person) -> None:
         if contact == Person("", "", "", ""):
@@ -222,8 +220,6 @@ class ViewTkinter:
                                                     contacts_list[i].id),
                         font=("Times New Roman", 12))
             lbl.grid(column=0, row=i+2)
-        if len(contacts_list) == 0:
-            self.show_error(view_contacts_window)
 
     def show_error(self, view_contact_window: Tk):
         messagebox.showinfo(title="Information", message="List contact don't "

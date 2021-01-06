@@ -8,7 +8,5 @@ class Person:
         self.id = identification
 
     def __eq__(self, other):
-        if self.name == other.name and self.address == other.address and \
-                self.phone == other.phone and self.id == other.id:
-            return True
-        return False
+        return self.name == other.name and self.address == other.address and \
+                self.phone == other.phone and self.id == other.id

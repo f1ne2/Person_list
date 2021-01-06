@@ -1,4 +1,5 @@
 from app.view import *
+from app.controller import *
 
 
 class Flag:
@@ -14,7 +15,11 @@ class Flag:
 
 
 def main():
-    flag = Flag(input(""))
+    flag = Flag(input())
+    if flag.define() == 1:
+        Controller(WorkWithFile().check_file_exist())
+    else:
+        Controller(WorkWithDB().check_file_exist())
     view2 = ViewTkinter(flag.define())
     window = view2.main_screen()
     view2.button_add(window)
@@ -27,5 +32,6 @@ def main():
 
 print("Press 1 if you would like to work with file or press any another key, "
       "if you would you like work with database")
+
 if __name__ == "__main__":
     main()
